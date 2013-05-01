@@ -16,7 +16,7 @@ class IOSParse
 	end
 
 	#
-	# Find all interfaces in the configuration file
+	# Find all interfaces
 	#
 	def interfaces
 		# Regex to parse out interfaces
@@ -26,7 +26,7 @@ class IOSParse
 	end
 
 	#
-	# Find all names in the configuration file
+	# Find all names
 	#
 	def names
 		# Regex to parse out names
@@ -46,7 +46,7 @@ class IOSParse
 	end
 
 	#
-	# Find all ACL
+	# Find all access-lists
 	#
 	def access_list
 		# Regex to parse out acl
@@ -79,7 +79,7 @@ class IOSParse
 		end
 		# Some parents are not within "!" blocks and require some extra work
 		if parse == true then
-			parse_parent(clean_object_group(output), parent)
+			parse_parent(clean_parent(output), parent)
 		else
 			# Return the parsed block as an array
 			output
@@ -87,9 +87,9 @@ class IOSParse
 	end
 
 	#
-	# Remove extra characters from object-groups
+	# Remove extra characters from parents
 	#
-	def clean_object_group(block)
+	def clean_parent(block)
 		# Array to store parsed blocks
 		output = Array.new
 		block.each do |line| 
