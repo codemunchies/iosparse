@@ -16,13 +16,13 @@ class IOSParse
 	end
 
 	#
-	# Find the interfaces in the configuration file
+	# Find all interfaces in the configuration file
 	#
 	def interfaces
 		# Regex to parse out interfaces
 		interfaces = /\["interface[\s\S]+/
-		# Call findblocks() passing the regex and parent
-		findblocks(interfaces, "interface")
+		# Call findblocks() passing regex, parent name, and parse boolean
+		findblocks(interfaces, "interface", false)
 	end
 
 	#
@@ -31,8 +31,18 @@ class IOSParse
 	def names
 		# Regex to parse out names
 		names = /\["names[\s\S]+/
-		# Call findblocks() passing regex and parent
-		findblocks(names, "names")
+		# Call findblocks() passing regex, parent name, and parse boolean
+		findblocks(names, "names", false)
+	end
+
+	#
+	# Find all routes
+	#
+	def routes
+		# Regex to parse out routes
+		routes = /\["route[\s\S]+/
+		# Call findblocks() passing regex, parent name, and parse boolean
+		findblocks(routes, "route", false)
 	end
 
 	#
@@ -40,19 +50,19 @@ class IOSParse
 	#
 	def access_list
 		# Regex to parse out acl
-		acl = /\["access-list[\s\S]+/
-		# Call findblocks() passing regex and parent
-		findblocks(acl, "access-list")
+		acl = /access-list[\s\S]+/
+		# Call findblocks() passing regex, parent name, and parse boolean
+		findblocks(acl, "access-list", true)
 	end
 
 	#
-	# Find all objects-groups
+	# Find all object-groups
 	#
 	def object_group
 		# Regex to parse out object-groups
 		group = /object-group[\s\S]+/
-		# Call findblocks() passing regex and parent
-		findblocks(group, "object-group")
+		# Call findblocks() passing regex, parent name, and parse boolean
+		findblocks(group, "object-group", true)
 	end
 
 	private
@@ -60,16 +70,16 @@ class IOSParse
 	#
 	# Primary method to accept regex and parent, then use them to parse blocks and store them in an Array
 	#
-	def findblocks(filter, parent)
+	def findblocks(filter, parent, parse = true)
 		# Array to store parsed blocks
 		output = Array.new
 		@blocks.each do |block|
 			# Use regex to filter via scan() and flatten then push to array
 			output << block.to_s.scan(filter).flatten if block.to_s.include?(parent)
 		end
-		# Object-groups are not within "!" blocks and require some extra work
-		if parent == "object-group" then
-			parse_object_group(clean_object_group(output))
+		# Some parents are not within "!" blocks and require some extra work
+		if parse == true then
+			parse_parent(clean_object_group(output), parent)
 		else
 			# Return the parsed block as an array
 			output
@@ -91,20 +101,20 @@ class IOSParse
 	end
 
 	#
-	# Object-groups come as a single string, we break each object-group into a string and push into an array
+	# Some parents come as a single string, we break each parents into a string and push into an array
 	#
-	def parse_object_group(block)
+	def parse_parent(block, parent)
 		# Array to store parsed blocks
 		output = Array.new
 		block.each do |line|
-			# Split the line where each object-group begins
-			line.to_s.split("object-group").each do |push|
+			# Split the line where each parent begins
+			line.to_s.split(parent).each do |push|
 				# Skip empty lines
 				next if push.include?('["')
 				# Remove extra "] characters from each line
 				push = push.gsub('"]', '')
-				# Re-add object-group to the beginning of the line and push it into the array line-by-line
-				output << "[\"object-group#{push}\"]"
+				# Re-add parent to the beginning of the line and push it into the array line-by-line
+				output << "[\"#{parent}#{push}\"]"
 			end
 		end
 		# Return the parsed block as an array
