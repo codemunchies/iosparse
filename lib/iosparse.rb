@@ -101,20 +101,20 @@ class IOSParse
 	end
 
 	#
-	# Some parents come as a single string, we break each parents into a string and push into an array
+	# Some parents come as a single string, we break each parent into a string and push into an array
 	#
 	def parse_parent(block, parent)
 		# Array to store parsed blocks
 		output = Array.new
 		block.each do |line|
 			# Split the line where each parent begins
-			line.to_s.split(parent).each do |push|
+			line.to_s.split(parent).each do |data|
 				# Skip empty lines
-				next if push.include?('["')
+				next if data.include?('["')
 				# Remove extra "] characters from each line
-				push = push.gsub('"]', '')
+				data = data.gsub('"]', '')
 				# Re-add parent to the beginning of the line and push it into the array line-by-line
-				output << "[\"#{parent}#{push}\"]"
+				output << "[\"#{parent}#{data}\"]"
 			end
 		end
 		# Return the parsed block as an array
