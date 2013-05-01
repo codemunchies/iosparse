@@ -70,7 +70,7 @@ class IOSParse
 	#
 	# Primary method to accept regex and parent, then use them to parse blocks and store them in an Array
 	#
-	def findblocks(filter, parent, parse = true)
+	def findblocks(filter, parent, parse)
 		# Array to store parsed blocks
 		output = Array.new
 		@blocks.each do |block|
