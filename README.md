@@ -1,10 +1,11 @@
 IOSParse will parse Cisco IOS configuration files, more functionality coming.
 
 # How do I use it?
-Good question.  Create a new IOSParse object and pass it the full path including filename of the Cisco IOS config file (usually a show all type of dump file).  Then ask it questions:
+Good question.  First install it using `gem install iosparse`.  
+Then use it.  Create a new IOSParse object and pass it filename of the Cisco IOS config file (usually a show all type of dump file).  Then ask it questions:
 
 ````
-config = IOSParse.new('ios.conf')
+config = IOSParse.new('path/to/ios.conf')
 puts config.interfaces
 ````
 ````
