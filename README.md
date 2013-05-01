@@ -6,6 +6,9 @@ Good question.  Create a new IOSParse object and pass it the full path including
 ````
 config = IOSParse.new('ios.conf')
 puts config.interfaces
+````
+````
+Output:
 
 [0] => ["interface Ethernet0/0\n ip address 1.1.2.1 255.255.255.0\n no cdp enable\n"]
 [1] => ["interface Serial1/0\n encapsulation ppp\n ip address 1.1.1.1 255.255.255.252\n"]
