@@ -21,8 +21,18 @@ class IOSParse
 	def interfaces
 		# Regex to parse out interfaces
 		interfaces = /\["interface[\s\S]+/
-		# Call findblocks() passing regex, parent name, and parse boolean
-		findblocks(interfaces, "interface", false)
+		# Call find_blocks() passing regex, parent name, and parse boolean
+		find_blocks(interfaces, "interface", false)
+	end
+
+	#
+	# Find all interfaces in monitor mode
+	#
+	def monitor_interfaces
+		# Regex to parse out the monitor interfaces
+		interfaces = /monitor-interface.+/
+		# Call find_lines() passing regex, parent name, and parse boolean
+		find_lines(interfaces, "monitor-interface", false)
 	end
 
 	#
@@ -31,8 +41,8 @@ class IOSParse
 	def names
 		# Regex to parse out names
 		names = /\["names[\s\S]+/
-		# Call findblocks() passing regex, parent name, and parse boolean
-		findblocks(names, "names", false)
+		# Call find_blocks() passing regex, parent name, and parse boolean
+		find_blocks(names, "names", false)
 	end
 
 	#
@@ -41,8 +51,8 @@ class IOSParse
 	def routes
 		# Regex to parse out routes
 		routes = /\["route[\s\S]+/
-		# Call findblocks() passing regex, parent name, and parse boolean
-		findblocks(routes, "route", false)
+		# Call find_blocks() passing regex, parent name, and parse boolean
+		find_blocks(routes, "route", false)
 	end
 
 	#
@@ -51,8 +61,8 @@ class IOSParse
 	def access_list
 		# Regex to parse out acl
 		acl = /access-list[\s\S]+/
-		# Call findblocks() passing regex, parent name, and parse boolean
-		findblocks(acl, "access-list", true)
+		# Call find_blocks() passing regex, parent name, and parse boolean
+		find_blocks(acl, "access-list", true)
 	end
 
 	#
@@ -61,8 +71,8 @@ class IOSParse
 	def object_group
 		# Regex to parse out object-groups
 		group = /object-group[\s\S]+/
-		# Call findblocks() passing regex, parent name, and parse boolean
-		findblocks(group, "object-group", true)
+		# Call find_blocks() passing regex, parent name, and parse boolean
+		find_blocks(group, "object-group", true)
 	end
 
 	private
@@ -70,7 +80,7 @@ class IOSParse
 	#
 	# Primary method to accept regex and parent, then use them to parse blocks and store them in an Array
 	#
-	def findblocks(filter, parent, parse)
+	def find_blocks(filter, parent, parse)
 		# Array to store parsed blocks
 		output = Array.new
 		@blocks.each do |block|
@@ -84,6 +94,25 @@ class IOSParse
 			# Return the parsed block as an array
 			output
 		end
+	end
+
+	#
+	# Primary method to accept regex and parent, then use them to parse lines and store them in an Array
+	#
+	def find_lines(filter, parent, parse)
+		# Array to store parsed blocks
+		output = Array.new
+		@blocks.each do |block|
+			# Use regex to filter via scan() then split each line
+			block.to_s.match(filter).to_s.split('\n').each do |line|
+				# Skip unless the parent is in the line
+				next unless line.match(filter)
+				# Push matches to array
+				output << normalize_line(line.match(filter))
+			end
+		end
+		# Return the parsed block as an array
+		output
 	end
 
 	#
@@ -119,5 +148,26 @@ class IOSParse
 		end
 		# Return the parsed block as an array
 		output
+	end
+
+	#
+	# Normalize block to standardize returned arrays
+	#
+	def normalize_block(block)
+		# Array to store normalized data
+		output = Array.new
+		block.each do |data|
+			# Normalize data
+			output << "[\"#{data}\\\\n\"]"
+		end
+		# Return the normalized array
+		output
+	end
+
+	#
+	# Normalize line to standardize returned arrays
+	def normalize_line(data)
+		# Return normalized data
+		"[\"#{data}\\\\n\"]"
 	end
 end
