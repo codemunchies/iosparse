@@ -107,7 +107,7 @@ class IOSParse
 			block.to_s.match(filter).to_s.split('\n').each do |line|
 				# Skip unless the parent is in the line
 				next unless line.match(filter)
-				# Push matches to array
+				# Push matches to array and normalize the matched lines
 				output << normalize_line(line.match(filter))
 			end
 		end

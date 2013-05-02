@@ -14,5 +14,6 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/codemunchies/iosparse"
   s.rubygems_version = "1.8.25"
   s.summary = "Parse Cisco IOS configurations"
+  s.license = "GNU"
 end
 
