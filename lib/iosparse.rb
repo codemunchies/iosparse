@@ -7,11 +7,18 @@ class IOSParse
 		# Store all blocks in the configuration
 		@blocks = Array.new
 		# Load the file
-		config = File.open(filename, 'r')
-		# Stream IO.read the file and scan for blocks, lines inbetween "!"
-		IO.read(config).scan(/(^[^!]+)/).each do |block|
-			# Push the blocks to the @blocks array
-			@blocks << block
+		begin
+			config = File.open(filename, 'r')
+			# Stream IO.read the file and scan for blocks, lines inbetween "!"
+			IO.read(config).scan(/(^[^!]+)/).each do |block|
+				# Push the blocks to the @blocks array
+				@blocks << block
+			end
+		rescue
+			# TODO: raise an error here 'bad file or path'
+		ensure
+			# Make sure we close the file
+			config.close
 		end
 	end
 
@@ -68,7 +75,7 @@ class IOSParse
 	#
 	# Find all object-groups
 	#
-	def object_group
+	def object_groups
 		# Regex to parse out object-groups
 		group = /object-group[\s\S]+/
 		# Call find_blocks() passing regex, parent name, and parse boolean
@@ -85,7 +92,7 @@ class IOSParse
 		output = Array.new
 		@blocks.each do |block|
 			# Use regex to filter via scan() and flatten then push to array
-			output << block.to_s.scan(filter).flatten if block.to_s.include?(parent)
+			output << normalize_block(block.to_s.scan(filter).flatten) if block.to_s.include?(parent)
 		end
 		# Some parents are not within "!" blocks and require some extra work
 		if parse == true then
@@ -152,22 +159,19 @@ class IOSParse
 
 	#
 	# Normalize block to standardize returned arrays
+	# All new line characters should be '\n'
 	#
-	def normalize_block(block)
-		# Array to store normalized data
-		output = Array.new
-		block.each do |data|
-			# Normalize data
-			output << "[\"#{data}\\\\n\"]"
-		end
-		# Return the normalized array
-		output
+	def normalize_block(data)
+		# Return normalized data
+		data.to_s.gsub("\\\\n", '\n') if data.to_s.include?('\\\\n')
 	end
 
 	#
 	# Normalize line to standardize returned arrays
+	# All new line characters should be '\n'
+	#
 	def normalize_line(data)
 		# Return normalized data
-		"[\"#{data}\\\\n\"]"
+		"[\"#{data}\\n\"]" unless data.to_s.include?('\n')
 	end
 end
