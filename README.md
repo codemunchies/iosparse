@@ -17,4 +17,4 @@ Output:
 [3] => ["interface Serial1/2\n encapsulation hdlc\n ip address 1.1.1.9 255.255.255.252\n"] 
 ````
 
-All objects returned are arrays that can be further manipulated and parsed.  "Human readable" format coming soon, maybe even a CLI.
+All objects returned are arrays that can be further manipulated and parsed.  "Human readable" format coming soon, maybe even a CLI.  Please note the mock Cisco ASA config file in the spec test is completely fabricated and is not intended to be a correct configuration, it is only to be used for it's syntax.
