@@ -1,4 +1,5 @@
 require 'iosparse'
+require 'spec_helper'
 
 describe 'IOSParse' do
 
