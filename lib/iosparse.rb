@@ -1,133 +1,129 @@
+#
+# IOSParse will parse Cisco IOS configuration files.
+#
 class IOSParse
-
-	#
 	# Load the configuration file passing IOSParse the filename
-	#
 	def initialize(filename)
 		# Store all blocks in the configuration
 		@blocks = Array.new
-		# Load the file
 		begin
 			config = File.open(filename, 'r')
 			# Stream IO.read the file and scan for blocks, lines inbetween "!"
 			IO.read(config).scan(/(^[^!]+)/).each do |block|
-				# Push the blocks to the @blocks array
 				@blocks << block
 			end
 		rescue
 			# TODO: raise an error here 'bad file or path'
 		ensure
-			# Make sure we close the file
 			config.close
 		end
 	end
 
-	#
 	# Find all interfaces
-	#
 	def interfaces
-		# Regex to parse out interfaces
-		interfaces = /\["interface[\s\S]+/
-		# Call find_blocks() passing regex, parent name, and parse boolean
-		find_blocks(interfaces, "interface", false, false)
+		interface = {
+			filter: /\["interface[\s\S]+/,
+			parent: "interface",
+			parse: false,
+			normalize: false
+		}
+		find_blocks(interface)
 	end
 
-	#
 	# Find all interfaces in monitor mode
-	#
 	def monitor_interfaces
-		# Regex to parse out the monitor interfaces
-		interfaces = /monitor-interface.+/
-		# Call find_lines() passing regex, parent name, and parse boolean
-		find_lines(interfaces, "monitor-interface", false, true)
+		monitor_interface = {
+			filter: /monitor-interface[\s\S]+/,
+			parent: "monitor-interface",
+			parse: false,
+			normalize: false
+		}
+		find_lines(monitor_interface)
 	end
 
-	#
 	# Find all names
-	#
 	def names
-		# Regex to parse out names
-		names = /\["names[\s\S]+/
-		# Call find_blocks() passing regex, parent name, and parse boolean
-		find_blocks(names, "names", false, false)
+		name = {
+			filter: /\["names[\s\S]+/,
+			parent: "names",
+			parse: false,
+			normalize: false
+		}
+		find_blocks(name)
 	end
 
-	#
 	# Find all routes
-	#
 	def routes
-		# Regex to parse out routes
-		routes = /\["route[\s\S]+/
-		# Call find_blocks() passing regex, parent name, and parse boolean
-		find_blocks(routes, "route", false, false)
+		route = {
+			filter: /\["route[\s\S]+/,
+			parent: "route",
+			parse: false,
+			normalize: false
+		}
+		find_blocks(route)
 	end
 
-	#
 	# Find all access-lists
-	#
 	def access_list
-		# Regex to parse out acl
-		acl = /access-list[\s\S]+/
-		# Call find_blocks() passing regex, parent name, and parse boolean
-		find_blocks(acl, "access-list", true, true)
+		acl = {
+			filter: /access-list[\s\S]+/,
+			parent: "access-list",
+			parse: true,
+			normalize: true
+		}
+		find_blocks(acl)
 	end
 
-	#
 	# Find all object-groups
-	#
 	def object_groups
-		# Regex to parse out object-groups
-		group = /object-group[\s\S]+/
-		# Call find_blocks() passing regex, parent name, and parse boolean
-		find_blocks(group, "object-group", true, true)
+		object_group = {
+			filter: /object-group[\s\S]+/,
+			parent: "object-group",
+			parse: true,
+			normalize: true
+		}
+		find_blocks(object_group)
 	end
 
 	private
 
-	#
-	# Primary method to accept regex and parent, then use them to parse blocks and store them in an Array
-	#
-	def find_blocks(filter, parent, parse, normalize)
+	# Use passed options hash to parse blocks and store them in an Array
+	def find_blocks(options)
 		# Array to store parsed blocks
 		output = Array.new
 		@blocks.each do |block|
 			# Use regex to filter via scan() and flatten then push to array
-			if normalize then
-				output << normalize_block(block.to_s.scan(filter).flatten) if block.to_s.include?(parent)
+			if options[:normalize]
+				output << normalize_block(block.to_s.scan(options[:filter]).flatten) if block.to_s.include?(options[:parent])
 			else
-				output << block.to_s.scan(filter).flatten if block.to_s.include?(parent)
+				output << block.to_s.scan(options[:filter]).flatten if block.to_s.include?(options[:parent])
 			end
 		end
 		# Some parents are not within "!" blocks and require some extra work
-		if parse then
-			parse_parent(clean_parent(output), parent)
+		if options[:parse]
+			parse_parent(clean_parent(output), options[:parent])
 		else
-			# Return the parsed block as an array
 			output
 		end
 	end
 
-	#
-	# Primary method to accept regex and parent, then use them to parse lines and store them in an Array
-	#
-	def find_lines(filter, parent, parse, normalize)
+	# Use passed options hash to parse lines and store them in an Array
+	def find_lines(options)
 		# Array to store parsed blocks
 		output = Array.new
 		@blocks.each do |block|
 			# Use regex to filter via scan() then split each line
-			block.to_s.match(filter).to_s.split('\n').each do |line|
+			block.to_s.match(options[:filter]).to_s.split('\n').each do |line|
 				# Skip unless the parent is in the line
-				next unless line.match(filter)
+				next unless line.match(options[:filter])
 				# Push matches to array and normalize the matched lines
-				if normalize then
-					output << normalize_line(line.match(filter))
+				if options[:normalize]
+					output << normalize_line(line.match(options[:filter]))
 				else
-					output << line.match(filter)
+					output << line.match(options[:filter])
 				end
 			end
 		end
-		# Return the parsed block as an array
-		output
 	end
 
 	#
@@ -140,8 +136,6 @@ class IOSParse
 			# Remove extra "] characters from each line
 			output << line.to_s.gsub('\"]', '')
 		end
-		# Return the parsed block as an array
-		output
 	end
 
 	#
@@ -161,8 +155,6 @@ class IOSParse
 				output << "[\"#{parent}#{data}\"]"
 			end
 		end
-		# Return the parsed block as an array
-		output
 	end
 
 	#
