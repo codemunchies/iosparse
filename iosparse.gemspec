@@ -9,11 +9,10 @@ Gem::Specification.new do |s|
   s.date = "2013-05-09"
   s.description = "Parse Cisco IOS configurations"
   s.email = "codemunchies@gmail.com"
-  s.files = ["lib/iosparse.rb", "iosparse.gemspec", "Gemfile", "README.md"]
+  s.files = ["lib/iosparse.rb", "iosparse.gemspec", "Gemfile", "README.md", "LICENSE"]
   s.require_paths = ["lib"]
   s.homepage = "http://github.com/codemunchies/iosparse"
   s.rubygems_version = "1.8.25"
   s.summary = "Parse Cisco IOS configurations"
   s.license = "GPL-3"
 end
-
