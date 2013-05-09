@@ -58,11 +58,11 @@ describe 'IOSParse' do
 	describe 'Access List' do
 
 		it 'should return an Array object' do
-			@config.access_list.is_a?(Array)
+			@config.access_lists.is_a?(Array)
 		end
 
 		it 'should return an access list' do
-			@config.access_list.each { |x| x.to_s.include?('access-list') }
+			@config.access_lists.each { |x| x.to_s.include?('access-list') }
 		end
 	end
 
@@ -74,6 +74,17 @@ describe 'IOSParse' do
 
 		it 'should return a list of object groups' do
 			@config.object_groups.each { |x| x.to_s.include?('object-group') }
+		end
+	end
+
+	describe 'Find #{custom}' do
+
+		it 'should return an Array object' do
+			@config.find('interface').is_a?(Array)
+		end
+
+		it 'should return a list of #{custom}' do
+			@config.find('interface').each { |x| x.to_s.include?('interface') }
 		end
 	end
 end

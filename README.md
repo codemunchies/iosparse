@@ -10,10 +10,13 @@ puts config.interfaces
 ````
 Output:
 
-[0] => ["interface Ethernet0/0\n ip address 1.1.2.1 255.255.255.0\n no cdp enable\n"]
-[1] => ["interface Serial1/0\n encapsulation ppp\n ip address 1.1.1.1 255.255.255.252\n"]
-[2] => ["interface Serial1/1\n encapsulation ppp\n ip address 1.1.1.5 255.255.255.252\n service-policy output QOS_1\n"]
-[3] => ["interface Serial1/2\n encapsulation hdlc\n ip address 1.1.1.9 255.255.255.252\n"] 
+[0] => interface GigabitEthernet0/0\n description PHYSICAL_INTERFACE_0\n no nameif\n no security-level\n no ip address
+[1] => interface GigabitEthernet0/0.74\n description VIRTUAL_INTERFACE_0.74\n vlan 74\n nameif INTERNAL\n security-level 70\n ip address 192.168.1.3 255.255.255.0 standby 10.10.1.3
+[2] => interface GigabitEthernet0/0.82\n description VIRTUAL_INTERFACE_0.82\n vlan 82\n nameif DMZ\n security-level 30\n ip address 192.168.1.4 255.255.255.0 standby 10.10.1.4
+[3] => interface GigabitEthernet0/0.83\n description VIRTUAL_INTERFACE_0.83\n vlan 83\n nameif WEB\n security-level 30\n ip address 192.168.1.5 255.255.255.0 standby 10.10.1.5
+[4] => interface GigabitEthernet0/1\n description PHYSICAL_INTERFACE_1\n no nameif\n no security-level\n no ip address
 ````
 
 All objects returned are arrays that can be further manipulated and parsed.  "Human readable" format coming soon, maybe even a CLI.  Please note the mock Cisco ASA config file in the spec test is completely fabricated and is not intended to be a correct configuration, it is only to be used for it's syntax.
+
+All '\n' are inject to show where children lines separate from the parent and allowed for easy String#gsub to parse and print in other formats.  There is also a find() method that allows you to customize searches, feel free to look at the documentation link on the <a href="http://rubygems.org/gems/iosparse">rubygems</a> site.
