@@ -18,7 +18,7 @@ describe 'IOSParse' do
 		end
 
 		it 'should return a list of interfaces' do
-			@config.interfaces.each { |x| x.to_s.include?('interface') }
+			@config.interfaces.each { |x| false unless x.to_s.match(/^interface/) }
 		end
 	end
 
@@ -29,7 +29,7 @@ describe 'IOSParse' do
 		end
 
 		it 'should return a list of monitor interfaces' do
-			@config.monitor_interfaces.each { |x| x.to_s.include?('monitor-interface') }
+			@config.monitor_interfaces.each { |x| false unless x.to_s.match(/^monitor-interface/) }
 		end
 	end
 
@@ -40,7 +40,7 @@ describe 'IOSParse' do
 		end
 
 		it 'should return a list of names' do
-			@config.names.each { |x| x.to_s.include?('names') }
+			@config.names.each { |x| false unless x.to_s.match(/^name/) }
 		end
 	end
 
@@ -51,7 +51,7 @@ describe 'IOSParse' do
 		end
 
 		it 'should return a list of routes' do
-			@config.routes.each { |x| x.to_s.include?('routes') }
+			@config.routes.each { |x| false unless x.to_s.match(/^route/) }
 		end
 	end
 
@@ -62,7 +62,7 @@ describe 'IOSParse' do
 		end
 
 		it 'should return an access list' do
-			@config.access_lists.each { |x| x.to_s.include?('access-list') }
+			@config.access_lists.each { |x| false unless x.to_s.match(/^access-list/) }
 		end
 	end
 
@@ -73,7 +73,7 @@ describe 'IOSParse' do
 		end
 
 		it 'should return a list of object groups' do
-			@config.object_groups.each { |x| x.to_s.include?('object-group') }
+			@config.object_groups.each { |x| false unless x.to_s.match(/^object-group/) }
 		end
 	end
 
@@ -84,7 +84,7 @@ describe 'IOSParse' do
 		end
 
 		it 'should return a list of #{custom}' do
-			@config.find('interface').each { |x| x.to_s.include?('interface') }
+			@config.find('interface').each { |x| false unless x.to_s.match(/^interface/) }
 		end
 	end
 end
