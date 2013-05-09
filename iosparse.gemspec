@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = "iosparse"
-  s.version = "0.0.6"
+  s.version = "0.0.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ari Mizrahi"]
-  s.date = "2013-05-05"
+  s.date = "2013-05-09"
   s.description = "Parse Cisco IOS configurations"
   s.email = "codemunchies@gmail.com"
   s.files = ["lib/iosparse.rb", "iosparse.gemspec", "Gemfile", "README.md"]
