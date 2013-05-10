@@ -22,7 +22,8 @@ All objects returned are arrays that can be further manipulated and parsed.  "Hu
 All '\n' are injected as delimiters to show where children lines separate from the parent and inteded to be used for easy String#gsub to parse and print in other formats.  Feel free to look at the documentation link on the <a href="http://rubygems.org/gems/iosparse">rubygems</a> site.
 
 Current methods:
-
-`find_all` used to find all specific rules, interface, object-group, route, name, etc.
-`has` used to find any rule that includes a specific string.
-`group_has_ip` returns group(s) that include a specific IP.
+````
+find_all() is used to find all specific rules, interface, object-group, route, name, etc.
+has() is used to find any rule that includes a specific string.
+group_has_ip() returns group(s) that include a specific IP.
+````
