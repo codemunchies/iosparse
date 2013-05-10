@@ -101,7 +101,3 @@ class IOSParse
 		end
 	end
 end
-
-config = IOSParse.new('../spec/etc/cisco_asa.config')
-
-puts config.group_has_ip('10.10.15.100').class
