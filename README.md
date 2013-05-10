@@ -5,7 +5,7 @@ Good question.  First install it using `gem install iosparse`.  Then use it.  Cr
 
 ````
 config = IOSParse.new('path/to/ios.conf')
-puts config.interfaces
+puts config.find_all('interface')
 ````
 ````
 Output:
@@ -19,4 +19,10 @@ Output:
 
 All objects returned are arrays that can be further manipulated and parsed.  "Human readable" format coming soon, maybe even a CLI.  Please note the mock Cisco ASA config file in the spec test is completely fabricated and is not intended to be a correct configuration, it is only to be used for it's syntax.
 
-All '\n' are inject to show where children lines separate from the parent and allowed for easy String#gsub to parse and print in other formats.  There is also a find() method that allows you to customize searches, feel free to look at the documentation link on the <a href="http://rubygems.org/gems/iosparse">rubygems</a> site.
+All '\n' are injected as delimiters to show where children lines separate from the parent and inteded to be used for easy String#gsub to parse and print in other formats.  Feel free to look at the documentation link on the <a href="http://rubygems.org/gems/iosparse">rubygems</a> site.
+
+Current methods:
+
+`find_all` used to find all specific rules, interface, object-group, route, name, etc.
+`has` used to find any rule that includes a specific string.
+`group_has_ip` returns group(s) that include a specific IP.

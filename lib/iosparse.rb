@@ -9,7 +9,7 @@ class IOSParse
 	end
 
 	# Custom filter
-	def find(custom_filter)
+	def find_all(custom_filter)
 		options = {
 			filter: /^#{custom_filter}.+/,
 			parent: "#{custom_filter}"
@@ -17,58 +17,22 @@ class IOSParse
 		find_blocks(options)
 	end
 
-	# Find all interfaces
-	def interfaces
+	# Custom seek
+	def has(custom_seek)
 		options = {
-			filter: /^interface.+/,
-			parent: "interface"
+			filter: /.+#{custom_seek}.+/,
+			parent: "#{custom_seek}"
 		}
 		find_blocks(options)
 	end
 
-	# Find all monitor-interfaces
-	def monitor_interfaces
+	# What group is an IP in?
+	def group_has_ip(ip)
 		options = {
-			filter: /^monitor-interface.+/,
-			parent: "monitor-interface"
+			filter: /^object-group.+#{ip}.+/,
+			parent: "#{ip}"
 		}
-		find_blocks(options)
-	end
-
-	# Find all access-lists
-	def access_lists
-		options = {
-			filter: /^access-list.+/,
-			parent: "access-list"
-		}
-		find_blocks(options)
-	end
-
-	# Find all names
-	def names
-		options = {
-			filter: /^name.+/,
-			parent: "name"
-		}
-		find_blocks(options)
-	end
-
-	# Find all routes
-	def routes
-		options = {
-			filter: /^route[^r].+/,
-			parent: "route"
-		}
-		find_blocks(options)
-	end
-
-	# Find all object-groups
-	def object_groups
-		options = {
-			filter: /^object-group.+/,
-			parent: "object-group"
-		}
-		find_blocks(options)
+		find_object_group(options)
 	end
 
 	private
@@ -78,6 +42,16 @@ class IOSParse
 		@yaml.each do |line|
 			output << line.match(options[:filter]) if line.match(options[:filter])
 		end
+		normalize(output)
+	end
+
+	def find_object_group(options)
+		input = Array.new
+		output = Array.new
+		@yaml.each do |line|
+			input << line.match(options[:filter]) if line.match(options[:filter])
+		end
+		input.each { |rule| output << rule.to_s.split("\s-\s")[0] }
 		normalize(output)
 	end
 
@@ -127,3 +101,7 @@ class IOSParse
 		end
 	end
 end
+
+config = IOSParse.new('../spec/etc/cisco_asa.config')
+
+puts config.group_has_ip('10.10.15.100').class

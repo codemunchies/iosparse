@@ -11,80 +11,36 @@ describe 'IOSParse' do
 		@config.is_a?(IOSParse)
 	end
 
-	describe 'Interfaces' do
-		
+	describe 'Find all #{parent}' do
+
 		it 'should return an Array object' do
-			@config.interfaces.is_a?(Array)
+			@config.find_all('interface').is_a?(Array)
 		end
 
-		it 'should return a list of interfaces' do
-			@config.interfaces.each { |x| false unless x.to_s.match(/^interface/) }
+		it 'should return a list of #{parent}' do
+			@config.find_all('interface').each { |x| false unless x.to_s.match(/^interface/) }
 		end
 	end
 
-	describe 'Monitor Interfaces' do
+	describe 'Has #{filter}' do
 
 		it 'should return an Array object' do
-			@config.monitor_interfaces.is_a?(Array)
+			@config.has('192.168.1.1').is_a?(Array)
 		end
 
-		it 'should return a list of monitor interfaces' do
-			@config.monitor_interfaces.each { |x| false unless x.to_s.match(/^monitor-interface/) }
+		it 'should return a list that includes #{filter}' do
+			@config.has('192.168.1.1').each { |x| false unless x.to_s.match(/.+192\.168\.1\.1.+/) }
 		end
 	end
 
-	describe 'Names' do
+	describe 'Group has #{ip}' do
 
 		it 'should return an Array object' do
-			@config.names.is_a?(Array)
+			@config.group_has_ip('192.168.5.1').is_a?(Array)
 		end
 
-		it 'should return a list of names' do
-			@config.names.each { |x| false unless x.to_s.match(/^name/) }
-		end
-	end
-
-	describe 'Routes' do
-
-		it 'should return an Array object' do
-			@config.routes.is_a?(Array)
-		end
-
-		it 'should return a list of routes' do
-			@config.routes.each { |x| false unless x.to_s.match(/^route/) }
-		end
-	end
-
-	describe 'Access List' do
-
-		it 'should return an Array object' do
-			@config.access_lists.is_a?(Array)
-		end
-
-		it 'should return an access list' do
-			@config.access_lists.each { |x| false unless x.to_s.match(/^access-list/) }
-		end
-	end
-
-	describe 'Object Group' do
-
-		it 'should return an Array object' do
-			@config.object_groups.is_a?(Array)
-		end
-
-		it 'should return a list of object groups' do
-			@config.object_groups.each { |x| false unless x.to_s.match(/^object-group/) }
-		end
-	end
-
-	describe 'Find #{custom}' do
-
-		it 'should return an Array object' do
-			@config.find('interface').is_a?(Array)
-		end
-
-		it 'should return a list of #{custom}' do
-			@config.find('interface').each { |x| false unless x.to_s.match(/^interface/) }
+		it 'should return a group(s) that includes #{ip}' do
+			@config.group_has_ip('192.168.5.1').each { |x| false unless x.to_s.match(/^object-group/) }
 		end
 	end
 end
