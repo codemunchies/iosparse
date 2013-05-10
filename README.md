@@ -14,7 +14,7 @@ Output:
 [3] => interface GigabitEthernet0/0.83\n description VIRTUAL_INTERFACE_0.83\n vlan 83\n nameif WEB\n security-level 30\n ip address 192.168.1.5 255.255.255.0 standby 10.10.1.5
 [4] => interface GigabitEthernet0/1\n description PHYSICAL_INTERFACE_1\n no nameif\n no security-level\n no ip address
 
-puts config.has("192.168.5.1")
+puts config.has("192.168.1.2")
 Output:
 [0] => name 192.168.1.2 CISCOASA02
 [1] => static (VLAN_03,VLAN_04) tcp 192.168.1.2 smtp access-list SOME_GROUP_02
