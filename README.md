@@ -24,6 +24,6 @@ All '\n' are injected as delimiters to show where children lines separate from t
 Current methods:
 ````
 find_all() is used to find all specific rules, interface, object-group, route, name, etc.
-has() is used to find any rule that includes a specific string.
-group_has_ip() returns group(s) that include a specific IP.
+has() is used to find any rule that includes a specific string like an IP or a group name.
+group_has_ip() returns group(s) that include a specific IP (doesn't sanitize input).
 ````
