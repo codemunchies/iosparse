@@ -57,7 +57,7 @@ class IOSParse
 
 	# Load Cisco 'show all' dump
 	def load_config(filename)
-		@config = File.open(filename, 'r')
+		@config = File.open(filename, 'r:ascii-8bit')
 		serialize
 		load_yaml
 		clean_up
