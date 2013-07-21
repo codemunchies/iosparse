@@ -1,3 +1,5 @@
+[![Gem Version](https://badge.fury.io/rb/iosparse.png)](http://badge.fury.io/rb/iosparse)
+
 IOSParse will parse Cisco IOS configuration files, more functionality coming.
 
 # How do I use it?
